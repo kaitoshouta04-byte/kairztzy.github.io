@@ -1,1 +1,1 @@
-# kairztzy.github.io
+# kairztzy
