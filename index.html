@@ -7,34 +7,27 @@
 
 <style>
 :root{
+  --card:rgba(255,255,255,.6);
   --text:#1e1e1e;
   --sub:#6b7280;
 
-  --overlay:rgba(255,255,255,.5);
-  --card:rgba(255,255,255,.6);
+  --blue-light:#9fdcff;
+  --blue-mid:#6fbdf5;
+  --blue-dark:#2a6fb3;
 
-  --blue-light:#7cc3f2;
-  --blue-dark:#0f3c6e;
   --gray:#9aa0a6;
   --blue-wa:#5fb3e4;
   --blue-pin:#0a3d6f;
   --black:#111827;
 }
 
-/* DARK MODE */
 body.dark{
+  --card:rgba(15,23,42,.6);
   --text:#f8fafc;
   --sub:#cbd5f5;
-
-  --overlay:rgba(0,0,0,.5);
-  --card:rgba(30,41,59,.6);
 }
 
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
   font-family:"Segoe UI",Arial,sans-serif;
@@ -45,12 +38,17 @@ body{
   padding:20px;
   color:var(--text);
   background:
-    linear-gradient(var(--overlay),var(--overlay)),
-    url("https://ar-hosting.pages.dev/1767535290203.jpg");
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
-  transition:.3s ease;
+    linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,.5)),
+    url("https://ar-hosting.pages.dev/1767535290203.jpg")
+    center/cover no-repeat;
+  transition:.4s;
+}
+
+body.dark{
+  background:
+    linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+    url("https://ar-hosting.pages.dev/1767535290203.jpg")
+    center/cover no-repeat;
 }
 
 /* CARD */
@@ -58,65 +56,50 @@ body{
   width:100%;
   max-width:1000px;
   background:var(--card);
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(18px);
   border-radius:30px;
-  padding:34px 32px 36px;
+  padding:36px 32px 38px;
   box-shadow:0 30px 70px rgba(0,0,0,.25);
   position:relative;
 }
 
 /* TOGGLE */
-.theme-toggle{
-  position:absolute;
-  top:24px;
-  right:24px;
-}
-
-.toggle{
-  width:74px;
-  height:34px;
-  background:rgba(0,0,0,.15);
-  border-radius:30px;
+.toggle{position:absolute;top:22px;right:22px}
+.switch{
+  width:70px;height:34px;
+  background:#cbd5f5;
+  border-radius:50px;
   position:relative;
   cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 10px;
 }
-
-.toggle span{
-  font-size:14px;
-  z-index:2;
-}
-
-.knob{
+.switch::before{
+  content:"🌙";
   position:absolute;
-  width:28px;
-  height:28px;
+  top:3px;left:4px;
+  width:28px;height:28px;
   background:#fff;
   border-radius:50%;
-  top:3px;
-  left:4px;
-  transition:.3s ease;
-  box-shadow:0 4px 10px rgba(0,0,0,.3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.35s;
 }
-
-/* LIGHT MODE */
-body:not(.dark) .knob{
+body.dark .switch{background:#334155}
+body.dark .switch::before{
+  content:"☀️";
   transform:translateX(36px);
 }
 
-/* TITLE */
+/* BADGE */
 .badge{
-  background:linear-gradient(135deg,#7cc3f2,#4fa3e3);
+  background:linear-gradient(135deg,var(--blue-light),var(--blue-mid));
   color:#fff;
-  display:inline-block;
   padding:14px 30px;
   border-radius:18px;
   font-weight:700;
   letter-spacing:1px;
-  margin-bottom:30px;
+  margin-bottom:34px;
+  display:inline-block;
 }
 
 /* PROFILE */
@@ -124,33 +107,50 @@ body:not(.dark) .knob{
   display:flex;
   align-items:center;
   gap:26px;
-  margin-bottom:40px;
+  margin-bottom:44px;
   flex-wrap:wrap;
 }
 
+/* AVATAR WAVE */
 .avatar-ring{
-  width:120px;
-  height:120px;
+  width:132px;height:132px;
   border-radius:50%;
-  background:linear-gradient(135deg,#4fa3e3,#0f3c6e);
+  position:relative;
   display:flex;
   align-items:center;
   justify-content:center;
 }
+.avatar-ring::before,
+.avatar-ring::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background:
+    radial-gradient(circle,
+      rgba(180,235,255,.95) 0%,
+      rgba(120,200,255,.7) 40%,
+      rgba(60,140,220,.35) 65%,
+      transparent 72%);
+  animation:wave 3.6s ease-in-out infinite;
+}
+.avatar-ring::after{animation-delay:1.8s}
+
+@keyframes wave{
+  0%{transform:scale(1);opacity:.8}
+  50%{transform:scale(1.28);opacity:.45}
+  100%{transform:scale(1.6);opacity:0}
+}
 
 .avatar{
-  width:96px;
-  height:96px;
+  width:96px;height:96px;
   border-radius:50%;
   object-fit:cover;
   background:#fff;
+  z-index:2;
 }
 
-.profile-text h1{
-  font-size:26px;
-  margin-bottom:8px;
-}
-
+.profile-text h1{font-size:26px;margin-bottom:8px}
 .profile-text p{
   font-size:15px;
   color:var(--sub);
@@ -158,63 +158,69 @@ body:not(.dark) .knob{
   line-height:1.6;
 }
 
-/* SOCIAL GRID */
+/* SOCIAL GRID – FIXED LAYOUT */
 .socials{
   display:grid;
   grid-template-columns:repeat(6,1fr);
-  gap:20px;
+  gap:22px;
 }
 
 .social{
-  border-radius:20px;
-  padding:22px 14px;
+  height:150px;
+  border-radius:22px;
+  padding:18px 14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
   text-align:center;
   text-decoration:none;
   color:#fff;
-  transition:.25s ease;
+  transition:.25s;
 }
 
 .social:hover{
-  transform:translateY(-8px);
+  transform:translateY(-8px) scale(1.02);
   box-shadow:0 18px 40px rgba(0,0,0,.25);
 }
 
 .social img{
-  width:42px;
-  height:42px;
-  margin-bottom:14px;
+  width:44px;
+  height:44px;
+  object-fit:contain;
 }
 
 .social span{
-  display:block;
-  font-size:13px;
+  font-size:14px;
   font-weight:600;
+  line-height:1.3;
+  letter-spacing:.3px;
 }
 
 /* COLORS */
-.tiktok{background:var(--blue-light);}
-.instagram{background:var(--blue-dark);}
-.telegram{background:var(--gray);}
-.whatsapp{background:var(--blue-wa);}
-.pinterest{background:var(--blue-pin);}
-.threads{background:var(--black);}
+.tiktok{background:var(--blue-light)}
+.instagram{background:var(--blue-dark)}
+.telegram{background:var(--gray)}
+.whatsapp{background:var(--blue-wa)}
+.pinterest{background:var(--blue-pin)}
+.threads{background:var(--black)}
 
 /* FOOTER */
 .footer{
+  margin-top:40px;
   text-align:center;
-  margin-top:36px;
   font-size:13px;
   color:var(--sub);
 }
 
 /* RESPONSIVE */
-@media(max-width:1000px){
-  .socials{grid-template-columns:repeat(3,1fr);}
+@media(max-width:1100px){
+  .socials{grid-template-columns:repeat(3,1fr)}
 }
-
 @media(max-width:600px){
-  .profile{flex-direction:column;text-align:center;}
-  .socials{grid-template-columns:repeat(2,1fr);}
+  .profile{flex-direction:column;text-align:center}
+  .socials{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -223,12 +229,8 @@ body:not(.dark) .knob{
 
 <div class="wrapper">
 
-  <div class="theme-toggle" onclick="toggleTheme()">
-    <div class="toggle">
-      <span>🌙</span>
-      <span>☀️</span>
-      <div class="knob"></div>
-    </div>
+  <div class="toggle" onclick="toggleMode()">
+    <div class="switch"></div>
   </div>
 
   <div class="badge">MY SOCIALS</div>
@@ -244,49 +246,23 @@ body:not(.dark) .knob{
   </div>
 
   <div class="socials">
-    <a class="social tiktok" href="https://tiktok.com/@kairztzzy">
-      <img src="https://ar-hosting.pages.dev/1767527761847.jpg">
-      <span>Tiktok</span>
-    </a>
-
-    <a class="social instagram" href="https://instagram.com/KairzAnomali969">
-      <img src="https://ar-hosting.pages.dev/1767527886684.jpg">
-      <span>Instagram</span>
-    </a>
-
-    <a class="social telegram" href="https://t.me/KaiShin05">
-      <img src="https://ar-hosting.pages.dev/1767527886042.jpg">
-      <span>Telegram</span>
-    </a>
-
-    <a class="social whatsapp" href="https://whatsapp.com/channel/0029Vb7hXOCEawdxIYY3tp0a">
-      <img src="https://ar-hosting.pages.dev/1767527887404.jpg">
-      <span>Saluran<br>Whatsapp</span>
-    </a>
-
-    <a class="social pinterest" href="https://pin.it/6rOL9V781">
-      <img src="https://ar-hosting.pages.dev/1767527985206.jpg">
-      <span>Pinterest</span>
-    </a>
-
-    <a class="social threads" href="https://www.threads.com/@kairzanomali969">
-      <img src="https://ar-hosting.pages.dev/1767526995144.jpg">
-      <span>Threads</span>
-    </a>
+    <a class="social tiktok" href="https://tiktok.com/@kairztzzy"><img src="https://ar-hosting.pages.dev/1767527761847.jpg"><span>TikTok</span></a>
+    <a class="social instagram" href="https://instagram.com/KairzAnomali969"><img src="https://ar-hosting.pages.dev/1767527886684.jpg"><span>Instagram</span></a>
+    <a class="social telegram" href="https://t.me/KaiShin05"><img src="https://ar-hosting.pages.dev/1767527886042.jpg"><span>Telegram</span></a>
+    <a class="social whatsapp" href="https://whatsapp.com/channel/0029Vb7hXOCEawdxIYY3tp0a"><img src="https://ar-hosting.pages.dev/1767527887404.jpg"><span>Saluran WhatsApp</span></a>
+    <a class="social pinterest" href="https://pin.it/6rOL9V781"><img src="https://ar-hosting.pages.dev/1767527985206.jpg"><span>Pinterest</span></a>
+    <a class="social threads" href="https://www.threads.com/@kairzanomali969"><img src="https://ar-hosting.pages.dev/1767526995144.jpg"><span>Threads</span></a>
   </div>
 
   <div class="footer">© 2026 Kai Shin</div>
 </div>
 
 <script>
-function toggleTheme(){
+function toggleMode(){
   document.body.classList.toggle("dark");
-  localStorage.setItem(
-    "mode",
-    document.body.classList.contains("dark") ? "dark" : "light"
-  );
+  localStorage.setItem("mode",
+    document.body.classList.contains("dark") ? "dark" : "light");
 }
-
 if(localStorage.getItem("mode")==="dark"){
   document.body.classList.add("dark");
 }
